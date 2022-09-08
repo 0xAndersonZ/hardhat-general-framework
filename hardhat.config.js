@@ -1,10 +1,8 @@
-require("@nomicfoundation/hardhat-toolbox")
 require("@nomiclabs/hardhat-waffle")
 require("@nomiclabs/hardhat-etherscan")
 require("hardhat-deploy")
 require("solidity-coverage")
 require("hardhat-gas-reporter")
-require("hardhat-contract-sizer")
 require("dotenv").config()
 require("./utils/extra-tasks")
 const { constants } = require("./helper-hardhat-config")
@@ -35,78 +33,84 @@ const PRIVATE_KEY_TESTING_RECEIVER =
 const PRIVATE_KEY_TESTING_USER =
     process.env.PRIVATE_KEY_TESTING_USER || constants.NULL_BYTES32
 
+const REPORT_GAS = process.env.REPORT_GAS || false
+
 const DEPLOYER = PRIVATE_KEY_DEPLOYER || constants.NULL_BYTES32
 
-// // optional
-// const MNEMONIC = process.env.MNEMONIC || "your mnemonic"
-
-/** @type import('hardhat/config').HardhatUserConfig */
-
 module.exports = {
-    // solidity: "0.8.9",
     // Mutiple solidity versions are supported (newer versions first)
     solidity: {
-        compilers: [{ version: "0.8.8" }, { version: "0.7.6" }]
+        compilers: [
+            { version: "0.8.14" },
+            { version: "0.7.6" },
+            { version: "0.6.6" },
+            { version: "0.4.18" }, // For deploying USDT
+        ],
     },
 
-    defaultNetwork: "hardhat",
+    defaultNetwork: "hardhat", // You can modifiy this to use a different network as default
 
     etherscan: {
-        apiKey: ETHERSCAN_API_KEY
+        apiKey: ETHERSCAN_API_KEY,
     },
 
     networks: {
         mainnet: {
             url: ETHEREUM_MAINNET_RPC_URl,
             // accounts: [DEPLOYER],
-            chainId: 1
+            chainId: 1,
         },
         goerli: {
             url: ETHEREUM_GOERLI_RPC_URL,
             accounts: [
                 PRIVATE_KEY_TESTING_DEPLOYER,
                 PRIVATE_KEY_TESTING_RECEIVER,
-                PRIVATE_KEY_TESTING_USER
+                PRIVATE_KEY_TESTING_USER,
             ],
-            chainId: 5
+            chainId: 5,
+            blockConfirmations: 6,
         },
         polygon: {
             url: POLYGON_MAINNET_RPC_URL,
             // accounts: [DEPLOYER],
-            chainId: 137
+            chainId: 137,
         },
         hardhat: {},
 
         localhost: {
             url: "http://127.0.0.1:8545/",
-            chainId: 31337
-        }
+            chainId: 31337,
+            blockConfirmations: 1,
+        },
     },
     gasReporter: {
-        enabled: false,
+        enabled: REPORT_GAS || false,
         outputFile: "./reports/gas-report.txt",
         noColors: true,
         currency: "USD",
         token: "ETH",
-        coinmarketcap: COINMARKETCAP_API_KEY
+        coinmarketcap: COINMARKETCAP_API_KEY,
     },
     namedAccounts: {
         deployer: {
             default: 0, // First position in an accounts list
             1: 0,
             5: 0,
-            137: 0
+            137: 0,
+            31337: 0,
         },
         receiver: {
             default: 1,
-            5: 1
+            5: 1,
+            31337: 1,
         },
         user: {
             default: 2,
-            5: 2
-        }
+            5: 2,
+            31337: 2,
+        },
     },
     mocha: {
-        timeout: 100000000
-    }
+        timeout: 100000000,
+    },
 }

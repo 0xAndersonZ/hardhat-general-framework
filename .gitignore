@@ -1,12 +1,13 @@
 node_modules
+images
 .env
 coverage
 coverage.json
 deployments
 typechain
 typechain-types
-reports
+yarn.lock
 #Hardhat files
 cache
 artifacts
-
+_README.md
