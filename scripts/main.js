@@ -5,9 +5,9 @@ async function main(name, args) {
     console.log(contractAddress)
 }
 
-main("ExampleV8", [129])
+main("USDT", ["Tether USD", "USDT", 6, "1000000000000000"])
     .then(() => process.exit(0))
-    .catch(error => {
+    .catch((error) => {
         console.error(error)
         process.exit(1)
     })
