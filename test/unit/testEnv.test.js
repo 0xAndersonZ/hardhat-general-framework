@@ -50,7 +50,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
                 it("Revert with insufficient approval", async () => {
                     usdt = await ethers.getContract("TetherToken", deployer)
                     const usdtConnectedToUser = usdt.connect(user)
-                    // In other cases, you can use .to.be.revertedWith("message") to capture the revert message
+                    // In other cases, you might use ".to.be.revertedWith("message")" to capture the revert message
                     await expect(usdtConnectedToUser.transferFrom(deployer.address, receiver.address, 1)).to.be.reverted
                 })
 

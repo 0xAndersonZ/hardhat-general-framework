@@ -1,5 +1,6 @@
 const { ethers, network } = require("hardhat")
 const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const { verify } = require("../utils/verify")
 // You can run this script in the shell with:
 // $yarn hardhat deploy --tags all/mocks
 
@@ -22,7 +23,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         })
 
         log("Deploying ERC20Sample......")
-        await deploy("ERC20Sample", {
+        const target = await deploy("ERC20Sample", {
             from: deployer,
             // args: [name, symbol, decimasl, organization]
             args: ["BoolSwapToken", "BST", 18, "BoolSwap"],
@@ -54,7 +55,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     ) {
         if (process.env.VERIFICATION == "true") {
             console.log("----------Contract verifying----------")
-            await verify(positionNFTManagerAddress, args)
+            await verify(target.address, [
+                "BoolSwapToken",
+                "BST",
+                18,
+                "BoolSwap",
+            ])
             console.log("----------Contract verified----------")
         } else {
             console.log("----------Contract verification skipped----------")

@@ -3,6 +3,7 @@ require("@nomiclabs/hardhat-etherscan")
 require("hardhat-deploy")
 require("solidity-coverage")
 require("hardhat-gas-reporter")
+require("hardhat-contract-sizer")
 require("dotenv").config()
 require("./utils/extra-tasks")
 const { constants } = require("./helper-hardhat-config")
@@ -46,6 +47,11 @@ module.exports = {
             { version: "0.6.6" },
             { version: "0.4.18" }, // For deploying USDT
         ],
+    },
+
+    contractSizer: {
+        runOnCompile: false,
+        // only: ["APIConsumer", "KeepersCounter", "PriceConsumerV3", "RandomNumberConsumerV2"],
     },
 
     defaultNetwork: "hardhat", // You can modifiy this to use a different network as default
