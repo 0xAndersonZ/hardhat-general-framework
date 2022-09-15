@@ -3,7 +3,6 @@ require("@nomiclabs/hardhat-etherscan")
 require("hardhat-deploy")
 require("solidity-coverage")
 require("hardhat-gas-reporter")
-require("hardhat-contract-sizer")
 require("dotenv").config()
 require("./utils/extra-tasks")
 const { constants } = require("./helper-hardhat-config")
@@ -22,6 +21,10 @@ const ETHEREUM_GOERLI_RPC_URL =
 const POLYGON_MAINNET_RPC_URL =
     process.env.POLYGON_MAINNET_RPC_URL ||
     "https://polygon-mainnet.g.alchemy.com/v2/your-api-key"
+
+const POLYGON_MUMBAI_RPC_URL =
+    process.env.POLYGON_MUMBAI_RPC_URL ||
+    "https://polygon-mumbai.g.alchemy.com/v2/your-api-key"
 
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || ""
 
@@ -49,11 +52,6 @@ module.exports = {
         ],
     },
 
-    contractSizer: {
-        runOnCompile: false,
-        // only: ["APIConsumer", "KeepersCounter", "PriceConsumerV3", "RandomNumberConsumerV2"],
-    },
-
     defaultNetwork: "hardhat", // You can modifiy this to use a different network as default
 
     etherscan: {
@@ -65,6 +63,7 @@ module.exports = {
             url: ETHEREUM_MAINNET_RPC_URl,
             // accounts: [DEPLOYER],
             chainId: 1,
+            blockConfirmations: 6,
         },
         goerli: {
             url: ETHEREUM_GOERLI_RPC_URL,
@@ -80,9 +79,19 @@ module.exports = {
             url: POLYGON_MAINNET_RPC_URL,
             // accounts: [DEPLOYER],
             chainId: 137,
+            blockConfirmations: 6,
+        },
+        mumbai: {
+            url: POLYGON_MUMBAI_RPC_URL,
+            accounts: [
+                PRIVATE_KEY_TESTING_DEPLOYER,
+                PRIVATE_KEY_TESTING_RECEIVER,
+                PRIVATE_KEY_TESTING_USER,
+            ],
+            chainId: 80001,
+            blockConfirmations: 6,
         },
         hardhat: {},
-
         localhost: {
             url: "http://127.0.0.1:8545/",
             chainId: 31337,
@@ -104,16 +113,19 @@ module.exports = {
             5: 0,
             137: 0,
             31337: 0,
+            80001: 0,
         },
         receiver: {
             default: 1,
             5: 1,
             31337: 1,
+            80001: 1,
         },
         user: {
             default: 2,
             5: 2,
             31337: 2,
+            80001: 2,
         },
     },
     mocha: {
